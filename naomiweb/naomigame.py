@@ -7,17 +7,27 @@ class NAOMIGame(object):
         'Get game names from NAOMI rom file.'
         try:
             fp = open(self.filename, 'rb')
-            fp.seek(0x30, os.SEEK_SET)
+            fp.seek(48, 0)
+            name = fp.read(32).decode('utf-8').strip(' ')
+            if name == "AWNAOMI":
+                fp.seek(65328, 0)
+                name = fp.read(32).decode('utf-8').strip(' ');
+            
+            # cleanup name
+            name = name.replace('-', '')
 
-            self.name['japan'] = fp.read(32).decode('utf-8').rstrip(' ')
-            self.name['usa'] = fp.read(32).decode('utf-8').rstrip(' ')
-            self.name['euro'] = fp.read(32).decode('utf-8').rstrip(' ')
-            self.name['asia'] = fp.read(32).decode('utf-8').rstrip(' ')
-            self.name['australia'] = fp.read(32).decode('utf-8').rstrip(' ')
+            # remove potential "JAPAN VERSION" suffix
+            fields = name.split('JAPAN')
+            name = fields[0].strip()
+            
+            # TODO remove region option ?           
+            for key in self.name.keys():
+                self.name[key] = name
 
             fp.close()
-        except Exception:
+        except Exception as e:
             print("__get_names(): Error reading names from" + self.filename)
+            print(e) 
 
     def __init__(self, filename):
         self.name = {'japan': '',
@@ -27,6 +37,7 @@ class NAOMIGame(object):
                 'australia': ''}
         self.filename = filename
         self.__get_names()
+        self.screenshot = "./static/screenshots/" + self.name['japan'].replace(' ', '%20') + ".png" # "https://r.mprd.se/media/images/12961-Fist_Of_The_North_Star-3.png"
         try:
             self.size = os.stat(filename).st_size
         except Exception:

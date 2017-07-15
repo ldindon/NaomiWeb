@@ -5,11 +5,21 @@
 	
 	% if defined('games'):
 	<p>Choose a game to play</p>
+	<div class="row">
 	% for game in games:
-		<p>
-			<a href="load/{{game.__hash__()}}">{{game.name[region]}}</a> <span class="label label-default">{{round(game.size/float(1024*1024), 1)}} MB</span>
-		</p>
+		<div class="row">
+			<div class="row">
+	           	<span class="label label-default">{{round(game.size/float(1024*1024), 1)}} MB</span>
+	           	{{game.name[region]}}
+	    	</div>
+	    	<div class="row">
+        		<a href="load/{{game.__hash__()}}">
+	          		<img src={{game.screenshot}} class="img-thumbnail" >
+	        	</a>
+	        </div>
+        </div>
 	% end
+	</div>
 	% end
 
 	% if not defined('games'):
