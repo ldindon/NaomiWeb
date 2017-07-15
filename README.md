@@ -1,6 +1,25 @@
 NaomiWeb
 ========
-NAOMIWeb/NetDIMM Loader is A Python-based web interface for browsing games to send to a NetDIMM. It's powered by bottle.py and Bootstrap. I recommended using this with a Raspberry Pi, but other hardware can be used instead. All documentation will be written for using it with a Pi.
+
+WARNING: Re-work of the original project in progress ...
+
+Added:
+------
+
+ * automatically get the name of the game inside the rom of Atomiswave conversion roms
+ * add screenshot to the list of games
+ 
+Please open the screenshot to see how the web interface looks like.
+ 
+ 
+ 
+ 
+Former documentation
+====================
+
+NAOMIWeb/NetDIMM Loader is A Python-based web interface for browsing games to send to a NetDIMM.
+It's powered by bottle.py and Bootstrap. I recommended using this with a Raspberry Pi, but
+other hardware can be used instead. All documentation will be written for using it with a Pi.
 
 Note: This is still a major work in progress and doesn't work yet.
 
