@@ -7,7 +7,8 @@ Added:
 ------
 
  * automatically get the name of the game inside the rom of Atomiswave conversion roms
- * add screenshot to the list of games
+ * display a screenshot per game
+ * now game upload to net-dimm is working
  
 Please open the screenshot to see how the web interface looks like.
  
