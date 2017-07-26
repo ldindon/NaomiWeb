@@ -14,86 +14,86 @@ triforce_ip = sys.argv[1]
 # - it *should* work on naomi and chihiro, but due to lack of hardware, i didn't try.
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print "connecting..."
+print("connecting...")
 s.connect((triforce_ip, 10703))
-print "ok!"
+print("ok!")
 
 # a function to receive a number of bytes with hard blocking
 def readsocket(n):
-	res = ""
+	res = b""
 	while len(res) < n:
 		res += s.recv(n - len(res))
 	return res
 
 # Peeks 16 bytes from Host (gamecube) memory
 def HOST_Read16(addr):
-	s.send(struct.pack("<II", 0xf0000004, addr))
+	s.send(struct.pack(b"<II", 0xf0000004, addr))
 	data = readsocket(0x20)
-	res = ""
+	res = b""
 	for d in xrange(0x10):
 		res += data[4 + (d ^ 3)]
 	return res
 
 # same, but 4 bytes.
 def HOST_Read4(addr, type = 0):
-	s.send(struct.pack("<III", 0x10000008, addr, type))
+	s.send(struct.pack(b"<III", 0x10000008, addr, type))
 	return s.recv(0xc)[8:]
 
 def HOST_Poke4(addr, data):
-	s.send(struct.pack("<IIII", 0x1100000C, addr, 0, data))
+	s.send(struct.pack(b"<IIII", 0x1100000C, addr, 0, data))
 
 def HOST_Restart():
-	s.send(struct.pack("<I", 0x0A000000))
+	s.send(struct.pack(b"<I", 0x0A000000))
 
 # Read a number of bytes (up to 32k) from DIMM memory (i.e. where the game is). Probably doesn't work for NAND-based games.
 def DIMM_Read(addr, size):
-	s.send(struct.pack("<III", 0x05000008, addr, size))
+	s.send(struct.pack(b"<III", 0x05000008, addr, size))
 	return readsocket(size + 0xE)[0xE:]
 
 def DIMM_GetInformation():
-	s.send(struct.pack("<I", 0x18000000))
+	s.send(struct.pack(b"<I", 0x18000000))
 	return readsocket(0x10)
 
 def DIMM_SetInformation(crc, length):
-	print "length: %08x" % length
-	s.send(struct.pack("<IIII", 0x1900000C, crc & 0xFFFFFFFF, length, 0))
+	print("length: %08x" % length)
+	s.send(struct.pack(b"<IIII", 0x1900000C, crc & 0xFFFFFFFF, length, 0))
 
 def DIMM_Upload(addr, data, mark):
-	s.send(struct.pack("<IIIH", 0x04800000 | (len(data) + 0xA) | (mark << 16), 0, addr, 0) + data)
+	s.send(struct.pack(b"<IIIH", 0x04800000 | (len(data) + 0xA) | (mark << 16), 0, addr, 0) + data)
 
 def NETFIRM_GetInformation():
-	s.send(struct.pack("<I", 0x1e000000))
+	s.send(struct.pack(b"<I", 0x1e000000))
 	return s.recv(0x404)
 
 def CONTROL_Read(addr):
-	s.send(struct.pack("<II", 0xf2000004, addr))
+	s.send(struct.pack(b"<II", 0xf2000004, addr))
 	return s.recv(0xC)
 
 def SECURITY_SetKeycode(data):
 	assert len(data) == 8
-	s.send(struct.pack("<I", 0x7F000008) + data)
+	s.send(struct.pack(b"<I", 0x7F000008) + data)
 
 def HOST_SetMode(v_and, v_or):
-	s.send(struct.pack("<II", 0x07000004, (v_and << 8) | v_or))
+	s.send(struct.pack(b"<II", 0x07000004, (v_and << 8) | v_or))
 	return readsocket(0x8)
 
 def DIMM_SetMode(v_and, v_or):
-	s.send(struct.pack("<II", 0x08000004, (v_and << 8) | v_or))
+	s.send(struct.pack(b"<II", 0x08000004, (v_and << 8) | v_or))
 	return readsocket(0x8)
 
 def DIMM22(data):
 	assert len(data) >= 8
-	s.send(struct.pack("<I", 0x22000000 | len(data)) + data)
+	s.send(struct.pack(b"<I", 0x22000000 | len(data)) + data)
 
 def MEDIA_SetInformation(data):
 	assert len(data) >= 8
-	s.send(struct.pack("<I",	0x25000000 | len(data)) + data)
+	s.send(struct.pack(b"<I",	0x25000000 | len(data)) + data)
 
 def MEDIA_Format(data):
-	s.send(struct.pack("<II", 0x21000004, data))
+	s.send(struct.pack(b"<II", 0x21000004, data))
 
 def TIME_SetLimit(data):
-	s.send(struct.pack("<II", 0x17000004, data))
+	s.send(struct.pack(b"<II", 0x17000004, data))
 
 def DIMM_DumpToFile(file):
 	for x in xrange(0, 0x20000, 1):
@@ -127,7 +127,7 @@ def DIMM_UploadFile(name, key = None):
 		crc = zlib.crc32(data, crc)
 		addr += len(data)
 	crc = ~crc
-	DIMM_Upload(addr, "12345678", 1)
+	DIMM_Upload(addr, b"12345678", 1)
 	DIMM_SetInformation(crc, addr)
 
 # obsolete
@@ -208,7 +208,7 @@ if 1:
 	# display "now loading..."
 	HOST_SetMode(0, 1)
 	# disable encryption by setting magic zero-key
-	SECURITY_SetKeycode("\x00" * 8)
+	SECURITY_SetKeycode(b"\x00" * 8)
 	
 	# uploads file. Also sets "dimm information" (file length and crc32)
 	DIMM_UploadFile(sys.argv[2])

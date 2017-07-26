@@ -33,8 +33,7 @@ class job:
         print("Loading {}...".format(game_path))
 		
         #self._process = subprocess.Popen(["python3", "naomi_boot.py", game_path], shell=False)
-        #self._process = subprocess.Popen(["python", "naomi_boot.py", game_path], shell=False)
-        self._process = subprocess.Popen(["python", "triforcetools.py", "192.168.1.2", game_path], shell=False)
+        self._process = subprocess.Popen(["python3", "triforcetools.py", "192.168.1.2", game_path], shell=False)
 
         return True
 
