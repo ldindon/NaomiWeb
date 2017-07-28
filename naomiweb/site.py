@@ -1,4 +1,6 @@
-from bottle import route, run, template, static_file, error, request, view
+from bottle import route, run, template, static_file, error, request, view, redirect
+from gevent import monkey; monkey.patch_all()
+from time import sleep
 import os
 import string
 import configparser
@@ -43,25 +45,33 @@ def index():
 @route('/load/<hashid:int>')
 def load(hashid):
     global loadingjob
-    if loadingjob.finished() == False:
+    
+    if loadingjob is not None and not loadingjob.finished():
         return "Error: A game is currently being loaded! Try again later"
-    else:
-        some_games = build_games_list()
-        for game in some_games:
-            if game.__hash__() == hashid:
-                loadingjob = job(game, prefs)
-                loadingjob.start()
-
-                if loadingjob.finished():
-                    return "Done loading the game."
-                else:
-                    return "Game isn't loaded yet."
-                return "Found the game" + str(hashid) + ", creating job..."
-
-
-
-    return "Unable to find" + str(hashid) + '!'
-
+        
+    some_games = build_games_list()
+    selected_game = None
+    for game in some_games:
+        if game.__hash__() == hashid:
+            selected_game = game
+            break
+            
+    if (selected_game is None):
+    	return "Unable to find" + str(hashid) + '!'
+    	
+    loadingjob = job(selected_game, prefs)
+    loadingjob.start()
+    # does not work with safari
+    yield "Loading: " + selected_game.name['japan'] + \
+          '<br>0---------------------------100%<br>'
+    while not loadingjob.finished(): # to be tested without arcade cabinet (fake job)
+        yield '...'
+        sleep(1)
+                
+    #yield "<br><p>BACK TO GAMES LIST<p>"
+    yield "<br><a href=\"/\">BACK TO GAMES LIST</a>"
+    #redirect('/') does not work due to previous yield
+    
 @route('/config', method='GET')
 def config():
     network_ip = prefs['Network']['ip'] or '192.168.0.10'

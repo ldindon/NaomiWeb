@@ -4,7 +4,6 @@
 	% include('navbar.tpl', activePage='games')
 	
 	% if defined('games'):
-	<p>Choose a game to play</p>
 	<div class="row">
 	% for game in games:
 		<div class="row">
