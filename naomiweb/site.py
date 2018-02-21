@@ -1,6 +1,4 @@
-from bottle import route, run, template, static_file, error, request, view, redirect
-from gevent import monkey; monkey.patch_all()
-from time import sleep
+from bottle import route, run, template, static_file, error, request, view
 import os
 import string
 import configparser
@@ -10,7 +8,7 @@ from loadgame import *
 PREFS_FILE = "settings.cfg"
 prefs = configparser.ConfigParser()
 
-loadingjob = job(1, 1)
+loadingjob = Job()
 
 def build_games_list():
     games = []
@@ -59,18 +57,11 @@ def load(hashid):
     if (selected_game is None):
     	return "Unable to find" + str(hashid) + '!'
     	
-    loadingjob = job(selected_game, prefs)
+    loadingjob = Job(selected_game)
     loadingjob.start()
-    # does not work with safari
-    yield "Loading: " + selected_game.name['japan'] + \
-          '<br>0---------------------------100%<br>'
-    while not loadingjob.finished(): # to be tested without arcade cabinet (fake job)
-        yield '...'
-        sleep(1)
-                
-    #yield "<br><p>BACK TO GAMES LIST<p>"
-    yield "<br><a href=\"/\">BACK TO GAMES LIST</a>"
-    #redirect('/') does not work due to previous yield
+
+    return "Loading: " + selected_game.name['japan'] + \
+           "<br><br><a href=\"/\">BACK TO GAMES LIST</a>"
     
 @route('/config', method='GET')
 def config():

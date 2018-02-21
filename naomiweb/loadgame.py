@@ -6,17 +6,11 @@ from naomigame import *
 A job sends a game to the NetDIMM. Each job has an accosiated process (based on tiforce_tools) that sends a game's data over the network to the NetDIMM. A transfer is started with the start() method. Status of the transfer can be checked with finished().
 '''
 
-class job:
-    _game = None
-    _configuration = None
-    
-    _game_file = None
-    _process = None
+class Job:
 
-
-    def __init__(self, naomigame, configuration):
-        self._game = naomigame
-        self._configuration = configuration
+    def __init__(self, game=""):
+        self._game = game
+        self._process = None
 
     def start(self):
         '''
@@ -28,11 +22,9 @@ class job:
         Return value: Always true
 
         '''
-        #game_path = self._configuration.get('Games', 'directory') + '/'+ self._game.filename
         game_path = self._game.filename
         print("Loading {}...".format(game_path))
 		
-        #self._process = subprocess.Popen(["python3", "naomi_boot.py", game_path], shell=False)
         self._process = subprocess.Popen(["python3", "triforcetools.py", "192.168.1.2", game_path], shell=False)
 
         return True
