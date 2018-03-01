@@ -8,8 +8,13 @@
 	% for game in games:
 		<div class="row">
 			<div class="row">
-	           	<span class="label label-default">{{round(game.size/float(1024*1024), 1)}} MB</span>
-	           	{{game.name[region]}}
+				% if game.isAtomiswave:
+	           	<img src=./static/images/atomiswave.png class="img-thumbnail">
+	           	% else:
+	           	<img src=./static/images/naomi.png class="img-thumbnail">
+	           	% end
+		    	<span class="label label-default">{{round(game.size/float(1024*1024), 1)}} MB</span>
+	    	    <span class="label label-default">{{game.name[region]}}</span>
 	    	</div>
 	    	<div class="row">
         		<a href="load/{{game.__hash__()}}">

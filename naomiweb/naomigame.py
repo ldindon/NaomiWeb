@@ -10,6 +10,7 @@ class NAOMIGame(object):
             fp.seek(48, 0)
             name = fp.read(32).decode('utf-8').strip(' ')
             if name == "AWNAOMI":
+                self.isAtomiswave = True
                 fp.seek(65328, 0)
                 name = fp.read(32).decode('utf-8').strip(' ');
             
@@ -36,6 +37,7 @@ class NAOMIGame(object):
                 'asia': '',
                 'australia': ''}
         self.filename = filename
+        self.isAtomiswave = False
         self.__get_names()
         self.screenshot = "./static/screenshots/" + self.name['japan'].replace(' ', '%20') + ".png" # "https://r.mprd.se/media/images/12961-Fist_Of_The_North_Star-3.png"
         try:
