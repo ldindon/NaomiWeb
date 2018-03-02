@@ -40,7 +40,22 @@ class NAOMIGame(object):
         self.filename = filename
         self.isAtomiswave = False
         self.__get_names()
-        self.screenshot = "./static/screenshots/" + self.name['japan'].replace(' ', '%20') + ".png" # "https://r.mprd.se/media/images/12961-Fist_Of_The_North_Star-3.png"
+        self.screenshots = list()
+        
+        # main screenshot
+        basename = "./static/screenshots/" + self.name['japan']
+        file = basename + ".png"
+        if not os.path.exists(file):
+            file = "./static/screenshots/no_screenshot.png"
+        self.screenshots.append(file.replace(' ', '%20'))
+        
+        # additional screenshots
+        for i in range(2):
+            file = basename + "_" + str(i) + ".png"
+            if os.path.exists(file):
+                self.screenshots.append(file.replace(' ', '%20'))
+        
+        # rom size
         try:
             self.size = os.stat(filename).st_size
         except Exception:

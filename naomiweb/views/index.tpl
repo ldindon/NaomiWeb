@@ -17,9 +17,11 @@
 	    	    <span class="label label-default">{{game.name[region]}}</span>
 	    	</div>
 	    	<div class="row">
+	    		% for screenshot in game.screenshots:
         		<a href="load/{{game.__hash__()}}">
-	          		<img src={{game.screenshot}} class="img-thumbnail" >
+	          		<img src={{screenshot}} class="img-thumbnail" >
 	        	</a>
+	        	% end
 	        </div>
         </div>
 	% end
