@@ -9,9 +9,11 @@ Added:
  * automatically get the name of the game inside the rom of Atomiswave conversion roms
  * display a screenshot per game
  * now game upload to net-dimm is working
+
+Screenshot
+----------
  
 ![Game selection screenshot](/screenshot.png?raw=true "Screenshot") 
- 
  
 Former documentation
 ====================
