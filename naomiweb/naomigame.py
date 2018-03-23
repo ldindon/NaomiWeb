@@ -7,16 +7,20 @@ class NAOMIGame(object):
         'Get game names from NAOMI rom file.'
         try:
             fp = open(self.filename, 'rb')
-            fp.seek(48, 0)
-            name = fp.read(32).decode('utf-8').strip(' ')
-            if name == "AWNAOMI":
+            fp.seek(16, 0)
+            company = fp.read(32).decode('utf-8').strip(' ').upper()
+            if "DARKSOFT" in company or company == "WWW.ARCADEMODBIOS.COM":
                 self.isAtomiswave = True
                 fp.seek(65328, 0)
                 name = fp.read(32).decode('utf-8').strip(' ');
+            else:
+                fp.seek(48, 0)
+                name = fp.read(32).decode('utf-8').strip(' ')
             
             # cleanup name
             name = name.replace('-', '')
             name = name.replace('#', '')
+            print(name)
 
             # remove potential "JAPAN VERSION" suffix
             fields = name.split('JAPAN')
