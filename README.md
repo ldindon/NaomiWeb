@@ -3,11 +3,14 @@ NaomiWeb
 
 WARNING: Re-work of the original project in progress ...
 
+The current version is working and can be used out of the box despite the fact that the re-work is not complete.
+I use it personnaly to upload games to my Naomi net-dimm.
+
 Added:
 ------
 
  * automatically get the name of the game inside the rom of Atomiswave conversion roms
- * display a screenshot per game
+ * display up to three screenshots per game
  * now game upload to net-dimm is working
 
 Screenshot
