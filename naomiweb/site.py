@@ -1,7 +1,8 @@
-from bottle import route, run, template, static_file, error, request, view
+from bottle import route, run, template, static_file, error, request, response, view, redirect
 import os
 import string
 import configparser
+import json
 from naomigame import *
 from loadgame import *
 
@@ -19,7 +20,6 @@ def build_games_list():
     if os.path.isdir(games_directory):
         for filename in os.listdir(games_directory):
             filename = games_directory + '/' + filename
-            print(filename)
             if(is_naomi_game(filename)):
                 game = NAOMIGame(filename)
                 games.append(game)
@@ -60,9 +60,18 @@ def load(hashid):
     loadingjob = Job(selected_game)
     loadingjob.start()
 
-    return "Loading: " + selected_game.name['japan'] + \
-           "<br><br><a href=\"/\">BACK TO GAMES LIST</a>"
-    
+    redirect('/')
+    #return template('index')
+    #return "Loading: " + selected_game.name['japan'] + \
+    #       "<br><br><a href=\"/\">BACK TO GAMES LIST</a>"
+
+@route('/status')
+def status():
+    global loadingjob
+    response.content_type = "text/event-stream"
+    response.cache_control = "no-cache"
+    return json.dumps({"status": loadingjob.status(), "message": loadingjob.message()})
+
 @route('/config', method='GET')
 def config():
     network_ip = prefs['Network']['ip'] or '192.168.0.10'

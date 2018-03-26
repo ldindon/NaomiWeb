@@ -20,7 +20,6 @@ class NAOMIGame(object):
             # cleanup name
             name = name.replace('-', '')
             name = name.replace('#', '')
-            print(name)
 
             # remove potential "JAPAN VERSION" suffix
             fields = name.split('JAPAN')
