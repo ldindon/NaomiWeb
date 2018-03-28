@@ -23,17 +23,17 @@ class Job:
         '''
         start the data transfer thread to send a game to the NetDIMM.
         '''
-        self._thread = threading.Thread(target=self._watch)
+        self._thread = threading.Thread(target=self._upload)
         self._thread.start()
 
-    def _watch(self):
+    def _upload(self):
         # TODO: use mutex?
         # start uploading game from a sub process
         game_path = self._game.filename
         self._message = "Uploading {}...".format(game_path)
         # "-u" option is used to skip buffering of stdout of the sub process
-        #self._process = Popen(["python3", "-u", "triforcetools.py", "192.168.1.2", game_path], shell=False, stderr=PIPE)
-        self._process = Popen(["python3", "-u", "test.py", str(self._game.size)], shell=False, stderr=PIPE)
+        self._process = Popen(["python3", "-u", "triforcetools.py", "192.168.1.2", game_path], shell=False, stderr=PIPE)
+        #self._process = Popen(["python3", "-u", "test.py", str(self._game.size)], shell=False, stderr=PIPE)
         
         # set the O_NONBLOCK flag to the process stderr
         flags = fcntl(self._process.stderr, F_GETFL) # get current flags
