@@ -17,6 +17,22 @@ Screenshot
 ----------
  
 ![Game selection screenshot](/screenshot.png?raw=true "Screenshot") 
+
+Software requirements
+---------------------
+
+ * python3
+ * python3-bottle
+
+Setup
+-----
+
+ * Games must be installed in naomiweb/games/ folder
+ * Screenshots must be installed in naomiweb/static/screenshots/ with the following patterns
+   - <game_name>.png
+   - <game_name>_0.png (optional)
+   - <game_name>_1.png (optional)
+ * The IP address of the net-dimm can be setup by editing the file loadgame.py (set to 192.168.1.2 by default)
  
 Former documentation
 ====================
